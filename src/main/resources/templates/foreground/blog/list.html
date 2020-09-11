@@ -1,0 +1,46 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<div class="data_list">
+    <div class="data_list_title">
+        <img th:src="@{/images/list_icon.png}"/>
+        最新博客
+    </div>
+    <div class="datas">
+        <ul>
+            <li th:each="blog : ${blogList}" style="margin-bottom: 30px">
+                <span class="date">
+                    <a th:href="@{|/blog/articles/${blog.id}|}">
+                        <span th:text="${#dates.format(blog.releaseDate,'yyyy年MM月dd日')}">2020年08月08日</span>
+                    </a>
+                </span>
+                <span class="title">
+                    <a th:href="@{|/blog/articles/${blog.id}|}" th:text="${blog.title}">博客标题</a>
+                </span>
+                <span class="summary">
+                    <a th:href="@{|/blog/articles/${blog.id}|}">
+                        <font color="black" th:text="|摘要: ${blog.summary }...|">摘要: 摘要...</font>
+                    </a>
+                </span>
+                <span class="img">
+                    <a th:each="image : ${blog.imagesList}" th:utext="${image}"
+                       th:href="@{|/blog/articles/${blog.id}|}">image图片
+                    </a>
+                    &nbsp;&nbsp;
+                </span>
+                <span class="info">发表于
+                    <span th:text="${#dates.format(blog.releaseDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    <span th:text="|阅读(${blog.clickHit}) 评论(${blog.replyHit})|"></span>
+                </span>
+            </li>
+            <hr style="height:5px;border:none;border-top:1px dashed gray;padding-bottom:  10px;"/>
+        </ul>
+    </div>
+</div>
+
+<div>
+    <nav>
+        <ul class="pagination pagination-sm">
+            <li th:utext="${pageCode}"></li>
+        </ul>
+    </nav>
+</div>

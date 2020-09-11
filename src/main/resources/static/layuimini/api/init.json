@@ -1,0 +1,127 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/admin/system/main.do"
+  },
+  "logoInfo": {
+    "title": "个人博客系统",
+    "image": "/layuimini/images/logo2.png",
+    "href": "javascript:;"
+  },
+  "menuInfo": [
+    {
+      "title": "常规管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "首页",
+          "href": "/admin/system/main.do",
+          "icon": "fa fa-home",
+          "target": "_self"
+        },
+        {
+          "title": "博客管理",
+          "href": "",
+          "icon": "fa fa-bold",
+          "target": "_self",
+          "child": [
+            {
+              "title": "写博客",
+              "href": "/admin/blog/toWriteBlog.do",
+              "icon": "fa fa-edit",
+              "target": "_self"
+            },
+            {
+              "title": "博客信息管理",
+              "href": "/admin/blog/toBlogManage.do",
+              "icon": "fa fa-book",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "博客类别管理",
+          "href": "",
+          "icon": "fa fa-sitemap",
+          "target": "_self",
+          "child": [
+            {
+              "title": "博客类别信息管理",
+              "href": "/admin/blogType/toBlogTypeManage.do",
+              "icon": "fa fa-sitemap",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "评论管理",
+          "href": "",
+          "icon": "fa fa-comments",
+          "target": "_self",
+          "child": [
+            {
+              "title": "评论审核",
+              "href": "/admin/comment/toCommentReview.do",
+              "icon": "fa fa-check-square-o",
+              "target": "_self"
+            },
+            {
+              "title": "评论信息管理",
+              "href": "/admin/comment/toCommentManage.do",
+              "icon": "fa fa-commenting",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "个人信息管理",
+          "href": "",
+          "icon": "fa fa-user-circle-o",
+          "target": "_self",
+          "child": [
+            {
+              "title": "修改个人信息",
+              "href": "/admin/blogger/toModifyInfo.do",
+              "icon": "fa fa-pencil",
+              "target": "_self"
+            },
+            {
+              "title": "修改密码",
+              "href": "/admin/blogger/toModifyPassword.do",
+              "icon": "fa fa-key",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "系统管理",
+          "href": "",
+          "icon": "fa fa-gears",
+          "target": "_self",
+          "child": [
+            {
+              "title": "友情链接管理",
+              "href": "/admin/link/toLinkManage.do",
+              "icon": "fa fa-chain",
+              "target": "_self"
+            },
+            {
+              "title": "刷新系统缓存",
+              "href": "/admin/system/toRefreshSystem.do",
+              "icon": "fa fa-refresh",
+              "target": "_self"
+            },
+            {
+              "title": "退出后台系统",
+              "href": "/admin/system/logout.do",
+              "icon": "fa fa-power-off",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

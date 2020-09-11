@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>刷新系统缓存</title>
+
+    <div th:include="~{include/include::metaData}"></div>
+    <div th:include="~{include/include::cssStyle}"></div>
+
+</head>
+<body>
+<div th:include="~{include/include::#commonJs}"></div>
+<script>
+    layui.use(['form', 'miniTab'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        layer.ready(function () {
+            $.post("[[@{/admin/system/refreshSystem.do}]]", {},
+                function (result) {
+                    if (result.success) {
+                        layer.msg("成功刷新系统缓存", {icon: 1, time: 1000},
+                            function () {
+                                miniTab.deleteCurrentByIframe();
+                            });
+                    } else {
+                        layer.msg("刷新系统缓存失败！", {icon: 2, time: 2000},
+                            function () {
+                                miniTab.deleteCurrentByIframe();
+                            });
+                    }
+                }, "json");
+        });
+
+    });
+</script>
+</body>
+</html>

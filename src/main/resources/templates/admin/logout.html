@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>退出后台系统</title>
+
+    <div th:include="~{include/include::metaData}"></div>
+    <div th:include="~{include/include::cssStyle}"></div>
+
+</head>
+<body>
+<div th:include="~{include/include::#commonJs}"></div>
+<script>
+    layui.use(['jquery', 'layer', 'miniTab'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        layer.ready(function () {
+            layer.confirm("确定退出后台系统吗?", {
+                    btn: ['确定', '取消'], icon: 3, title: '退出提示',
+                    btn2: function () {
+                        layer.msg("用户取消退出", {icon: 6, time: 1000},
+                            function () {
+                                miniTab.deleteCurrentByIframe();
+                            });
+                    }
+                },
+                function () {
+                    layer.msg("退出成功", {icon: 1, time: 800},
+                        function () {
+                            window.open('[[@{/logout}]]', '_parent');
+                        });
+                    //打开新窗口
+                });
+        });
+
+    });
+</script>
+</html>

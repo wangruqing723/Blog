@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title th:text="${pageTitle}">页面标题</title>
+
+    <link rel="stylesheet" th:href="@{/bootstrap3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap3/css/bootstrap-theme.min.css}">
+    <link rel="stylesheet" th:href="@{/css/blog.css}">
+    <link th:href="@{/favicon.ico}" rel="SHORTCUT ICON">
+    <script th:src="@{/bootstrap3/js/jquery-1.11.2.min.js}"></script>
+    <script th:src="@{/bootstrap3/js/bootstrap.min.js}"></script>
+
+    <script>
+
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?aa5c701f4f646931bf78b6f40b234ef5";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+
+    </script>
+
+    <style type="text/css">
+        body {
+            padding-top: 10px;
+            padding-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div th:replace="foreground/common/head"></div>
+
+    <div th:replace="foreground/common/menu"></div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div th:replace="${mainPage}"></div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="data_list">
+                <div class="data_list_title">
+                    <img th:src="@{/images/user_icon.png}"/>
+                    博主信息
+                </div>
+                <div class="user_image">
+                    <img th:src="@{|/userImages/${application.blogger.imageName}|}"/>
+                </div>
+                <div class="nickName" th:text="${application.blogger.nickName}">昵称</div>
+                <div class="userSign" th:text="|(${application.blogger.sign})|">(个性签名)</div>
+            </div>
+
+            <div class="data_list">
+                <div class="data_list_title">
+                    <img th:src="@{/images/byType_icon.png}"/>
+                    按日志类别
+                </div>
+                <div class="datas">
+                    <ul>
+                        <li th:each="blogTypeCount : ${application.blogTypeCountList}">
+                            <span>
+                                <a th:href="@{/index.do(typeId=${blogTypeCount.id})}"
+                                   th:text="|${blogTypeCount.typeName} (${blogTypeCount.blogCount})|">Java</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="data_list">
+                <div class="data_list_title">
+                    <img th:src="@{/images/byDate_icon.png}"/>
+                    按日志日期
+                </div>
+                <div class="datas">
+                    <ul>
+                        <li th:each="blogCount : ${application.blogCountList}">
+                            <span>
+                                <a th:href="@{/index.do(releaseDateStr=${blogCount.releaseDateStr})}"
+                                   th:text="|${blogCount.releaseDateStr} (${blogCount.blogCount})|">2020-08</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="data_list">
+                <div class="data_list_title">
+                    <img th:src="@{/images/link_icon.png}"/>
+                    友情链接
+                </div>
+                <div class="datas">
+                    <ul>
+                        <li th:each="link : ${application.linkList}">
+                            <span>
+                                <a th:href="${link.linkUrl}" th:text="${link.linkName}" target="_blank">博客网</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="foreground/common/foot"></div>
+</div>
+</body>
+</html>

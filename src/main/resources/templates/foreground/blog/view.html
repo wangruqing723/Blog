@@ -1,0 +1,152 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" th:href="@{/layuimini/lib/layui-v2.5.5/css/layui.css}"
+      media="all">
+<link rel="stylesheet" th:href="@{/layuimini/css/public.css}" media="all">
+<script type="text/javascript"
+        th:src="@{/ueditor/third-party/SyntaxHighlighter/shCore.js}"></script>
+<link rel="stylesheet"
+      th:href="@{/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css}">
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+<script th:src="@{/layuimini/lib/layui-v2.5.5/layui.all.js}"
+        charset="utf-8"></script>
+<script type="text/javascript">
+    function loadimage() {
+        document.getElementById("randImage").src = "[[@{/comment/loadImage.do?}]]" + Math.random();
+    }
+
+    function submitData() {
+        var content = $("#content").val();
+        var imageCode = $("#imageCode").val();
+        if ($.trim(content) == '') {
+            layer.msg("请输入评论内容！", {icon: 0, time: 2000});
+        } else if ($.trim(imageCode) == '') {
+            layer.msg("请填写验证码！", {icon: 0, time: 2000});
+        } else {
+            $.post("[[@{/comment/save.do}]]", {
+                'content': content,
+                'imageCode': imageCode,
+                'blog.id': '[[${blog.id}]]'
+            }, function (result) {
+                if (result.success) {
+                    layer.msg("评论已提交成功，审核通过后显示！", {icon: 6, time: 2500},
+                        function () {
+                            window.location.reload();
+                        });
+                } else {
+                    layer.msg(result.errorInfo, {icon: 2, time: 2000});
+                    loadimage();
+                }
+            }, "json");
+        }
+    }
+
+    function showOtherComment() {
+        $('.otherComment').show();
+    }
+</script>
+<div class="data_list">
+    <div class="data_list_title">
+        <img th:src="@{/images/blog_show_icon.png}"/>
+        博客信息
+    </div>
+    <div>
+        <div class="blog_title"><h3><strong th:text="${blog.title}">博客标题</strong></h3></div>
+        <div style="padding-left: 330px;padding-bottom: 20px;padding-top: 10px">
+            <div class="bshare-custom"><a title="分享到QQ空间" class="bshare-qzone"></a>
+                <a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+                <a title="分享到人人网" class="bshare-renren"></a>
+                <a title="分享到腾讯微博" class="bshare-qqmb"></a>
+                <a title="分享到网易微博" class="bshare-neteasemb"></a>
+                <a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+                <span class="BSHARE_COUNT bshare-share-count">0</span>
+            </div>
+            <script type="text/javascript" charset="utf-8"
+                    src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=1&amp;lang=zh"></script>
+            <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+        </div>
+        <div class="blog_info">
+            发布时间：『
+            <span th:text="${#dates.format(blog.releaseDate,'yyyy-MM-dd HH:mm')}"></span>
+            』&nbsp;&nbsp;博客类别：<span th:text="${blog.blogType.typeName}"></span>&nbsp;&nbsp;
+            阅读(<span th:text="${blog.clickHit}"></span>)
+            评论(<span th:text="${blog.replyHit}"></span>)
+        </div>
+        <div class="blog_content">
+            <span th:utext="${blog.content}"></span>
+        </div>
+        <div class="blog_keyWord">
+            <font><strong>关键字：</strong></font>
+            <span th:if="${keyWords == null}">&nbsp;&nbsp;无</span>
+
+            <span th:each="keyWord : ${keyWords}">
+            &nbsp;&nbsp;<a th:href="@{/blog/q.do(q=${keyWord})}" target="_blank" th:text="${keyWord}">关键字</a>&nbsp;&nbsp;
+            </span>
+        </div>
+        <div class="blog_lastAndNextPage">
+            <span th:utext="${pageCode}"></span>
+        </div>
+    </div>
+</div>
+<div class="data_list">
+    <div class="data_list_title">
+        <img th:src="@{/images/comment_icon.png}"/>
+        评论信息
+        <a th:if="${commentList.size() > 10}" href="javascript:showOtherComment()"
+           style="float: right;padding-right: 40px;">显示所有评论</a>
+    </div>
+    <div class="commentDatas">
+        <span th:if="${commentList.size() == 0}">暂无评论</span>
+
+        <span th:if="${commentList.size() > 0}" th:each="comment,stat : ${commentList}">
+            <span th:if="${stat.index < 10}">
+                <div class="comment">
+                    <span>
+                        <font th:text="|${stat.index+1}楼|"></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <font th:text="|${comment.userIp}|"></font>：
+                        <span th:text="${comment.content}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;
+                        <span th:text="${#dates.format(comment.commentDate,'yyyy-MM-dd HH:mm')}"></span>&nbsp;]
+                    </span>
+                </div>
+            </span>
+            <span th:if="${stat.index > 10}">
+               <div class="otherComment">
+                   <div class="comment">
+                       <span>
+                           <font th:text="|${stat.index+1}楼|"></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                           <font th:text="|${comment.userIp}|"></font>：
+                           <span th:text="${comment.content}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;
+                           <span th:text="${#dates.format(comment.commentDate,'yyyy-MM-dd HH:mm')}"></span>&nbsp;]
+                       </span>
+                   </div>
+               </div>
+            </span>
+        </span>
+    </div>
+</div>
+
+<div class="data_list">
+    <div class="data_list_title">
+        <img th:src="@{/images/publish_comment_icon.png}"/>
+        发表评论
+    </div>
+    <div class="publish_comment">
+        <div>
+            <textarea style="width: 100%;height: 100px" rows="3" id="content" name="content"
+                      placeholder="来说两句吧..."></textarea>
+        </div>
+        <div class="verCode">
+            验证码：<input maxlength="4" type="text" th:value="${imageCode}" name="imageCode" id="imageCode" size="10"
+                       onkeydown="if(event.keyCode==13) submitData()"/>&nbsp;
+            <img onclick="javascript:loadimage();"
+                 title="换一张试试" name="randImage" id="randImage" th:src="@{/comment/loadImage.do}"
+                 width="60" height="20" border="1" align="absmiddle">
+        </div>
+        <div class="publishButton">
+            <button class="btn btn-primary" type="button" onclick="submitData()">发表评论</button>
+        </div>
+    </div>
+</div>
+</html>

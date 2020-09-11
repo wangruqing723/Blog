@@ -1,0 +1,30 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<div class="data_list">
+    <div class="data_list_title">
+        <img th:src="@{/images/search_icon.png}"/>
+        搜索&nbsp;<font color="red" th:text="${q}"></font>&nbsp;的结果 &nbsp;(总共搜索到&nbsp;
+        <span th:text="${resultTotal}">0</span>&nbsp;条记录)
+    </div>
+    <div class="datas search">
+        <ul>
+            <span th:if="${blogList.size() == 0}">
+                <div align="center" style="padding-top: 20px">未查询到结果，请换个关键字试试看！</div>
+            </span>
+            <span th:if="${blogList.size() > 0}">
+                <li th:each="blog : ${blogList}" style="margin-bottom: 20px">
+                        <span class="title">
+                            <a th:href="@{|/blog/articles/${blog.id}|}" target="_blank" th:utext="${blog.title}">博客标题</a>
+                        </span>
+                    <span class="summary" th:utext="|摘要: ${blog.content}...|">摘要: ...</span>
+                    <span class="link">
+                        <a th:href="@{|/blog/articles/${blog.id}|}" th:target="_blank">http://blog.vewlwy.com/blog/articles/[[${blog.id}]]</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;发布日期：<span th:text="${blog.releaseDateStr}"></span>
+                    </span>
+                </li>
+            </span>
+        </ul>
+    </div>
+    <span th:utext="${pageCode}">0</span>
+</div>
+</html>
