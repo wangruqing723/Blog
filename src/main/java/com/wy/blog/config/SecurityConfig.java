@@ -2,8 +2,10 @@ package com.wy.blog.config;
 
 import com.wy.blog.service.BloggerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,6 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private BloggerService bloggerService;
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     /**
      * 认证
      *
@@ -37,7 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //super.configure(auth);
         auth.userDetailsService(bloggerService).passwordEncoder(new BCryptPasswordEncoder());
 
     }
@@ -51,7 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //super.configure(http);
         http.authorizeRequests().antMatchers("/", "/index", "/login.do", "/index.do", "/toLogin.do", "/blog/**", "/blogger/**", "/comment/**", "/foreground/**", "/bootstrap3/**", "/css/**", "/images/**", "/layuimini/**", "/ueditor/**", "/userImages/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated();//除了上面的资源,其余的资源需要认证才能访问
 

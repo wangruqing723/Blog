@@ -25,12 +25,12 @@ public class BCryptPasswordEncoderUtils {
     }
 
     public static void main(String[] args) {
-        String password = "123456";
+        String password = "0723";
         String encoderPassword = encoderPassword(password);
         System.out.println("encoderPassword = " + encoderPassword);
 //        $2a$10$D1AoesLYlCJAShxitvj7seB8/pK1LwlKNcJWPaVyKSkA9VjL4Ztfm
 //        $2a$10$hRzXkBeUzourZIfJAykAK.M5ROBqyAkUeJEP/Z7SG01RHurrCyNA.
-        System.out.println(matchesPassword("123456", encoderPassword));
+        System.out.println(matchesPassword("0723", encoderPassword));
     }
 
 }

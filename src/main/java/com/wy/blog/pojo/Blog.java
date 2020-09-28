@@ -1,5 +1,6 @@
 package com.wy.blog.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,6 +26,7 @@ public class Blog implements Serializable {
     private Integer id; // 编号
     private String title; // 博客标题
     private String summary; // 摘要
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
     private Date releaseDate; // 发布日期
     private Integer clickHit; // 查看次数
     private Integer replyHit; // 回复次数

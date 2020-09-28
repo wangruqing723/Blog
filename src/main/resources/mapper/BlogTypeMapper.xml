@@ -21,6 +21,7 @@
 
     <select id="list" parameterType="Map" resultMap="BlogTypeResult">
         select * from t_blogType
+        order by orderNo
         <if test="start!=null and size!=null">
             limit #{start},#{size}
         </if>

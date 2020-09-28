@@ -36,7 +36,7 @@ public class BlogController {
     private CommentService commentService;
 
     // 博客索引
-    private BlogIndex blogIndex = new BlogIndex();
+    private final BlogIndex blogIndex = new BlogIndex();
 
     /**
      * 请求博客详细信息
@@ -46,21 +46,33 @@ public class BlogController {
      */
     @RequestMapping("/articles/{id}")
     public ModelAndView details(@PathVariable("id") Integer id, HttpServletRequest request) throws Exception {
+        log.debug("跳转到博客详情页面id={}", id);
         ModelAndView mv = new ModelAndView();
         Blog blog = blogService.findById(id);
+        if (blog == null) {
+            mv.addObject("blog", null);
+            mv.addObject("commentList", null);
+            mv.addObject("pageCode", this.genUpAndDownPageCode(blogService.getLastBlog(id), blogService.getNextBlog(id), request.getServletContext().getContextPath()));
+            mv.addObject("pageTitle", "该博客已删除");
+            mv.setViewName("mainTemp");
+            return mv;
+        }
+        blog.getReleaseDate().setTime(blog.getReleaseDate().getTime() - 28800000);
         String keyWords = blog.getKeyWord();
         if (StringUtil.isNotEmpty(keyWords)) {
-            String arr[] = keyWords.split(" ");
+            String[] arr = keyWords.split(" ");
             mv.addObject("keyWords", StringUtil.filterWhite(Arrays.asList(arr)));
         } else {
             mv.addObject("keyWords", null);
         }
         mv.addObject("blog", blog);
-        blog.setClickHit(blog.getClickHit() + 1); // 博客点击次数加1
+        // 博客点击次数加1
+        blog.setClickHit(blog.getClickHit() + 1);
         blogService.update(blog);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("blogId", blog.getId());
-        map.put("state", 1); // 查询审核通过的评论
+        // 查询审核通过的评论
+        map.put("state", 1);
         mv.addObject("commentList", commentService.list(map));
         mv.addObject("pageCode", this.genUpAndDownPageCode(blogService.getLastBlog(id), blogService.getNextBlog(id), request.getServletContext().getContextPath()));
         mv.addObject("mainPage", "foreground/blog/view.html");
@@ -80,22 +92,18 @@ public class BlogController {
     public ModelAndView search(@RequestParam(value = "q", required = false) String q,
                                @RequestParam(value = "page", required = false) String page,
                                HttpServletRequest request) throws Exception {
+        log.debug("跳转到搜索页面,搜索条件q={},page={}", q, page);
         if (StringUtil.isEmpty(page)) {
             page = "1";
         }
-        log.debug("查询条件为={}", q);
         ModelAndView mv = new ModelAndView();
         mv.addObject("mainPage", "foreground/blog/result.html");
         List<Blog> blogList = blogIndex.searchBlog(q.trim());
-        log.debug("查询条件筛选后的博客集合为={}", blogList);
-        Integer toIndex = blogList.size() >= Integer.parseInt(page) * 10 ? Integer.parseInt(page) * 10 : blogList.size();
+        int toIndex = Math.min(blogList.size(), Integer.parseInt(page) * 10);
         mv.addObject("blogList", blogList.subList((Integer.parseInt(page) - 1) * 10, toIndex));
-        log.debug("查询条件筛选后的博客集合为={}", blogList.subList((Integer.parseInt(page) - 1) * 10, toIndex));
         mv.addObject("pageCode", this.genUpAndDownPageCode(Integer.parseInt(page), blogList.size(), q, 10, request.getServletContext().getContextPath()));
         mv.addObject("q", q);
-        log.debug("查询条件为={}", q);
         mv.addObject("resultTotal", blogList.size());
-        log.debug("查询条件筛选后的博客集合的长度为={}", blogList.size());
         mv.addObject("pageTitle", "搜索关键字'" + q + "'结果页面_Java个人博客系统");
         mv.setViewName("mainTemp");
         return mv;
@@ -109,16 +117,16 @@ public class BlogController {
      * @return
      */
     private String genUpAndDownPageCode(Blog lastBlog, Blog nextBlog, String projectContext) {
-        StringBuffer pageCode = new StringBuffer();
+        StringBuilder pageCode = new StringBuilder();
         if (lastBlog == null || lastBlog.getId() == null) {
             pageCode.append("<p>上一篇：没有了</p>");
         } else {
-            pageCode.append("<p>上一篇：<a href='" + projectContext + "/blog/articles/" + lastBlog.getId() + "'>" + lastBlog.getTitle() + "</a></p>");
+            pageCode.append("<p>上一篇：<a href='").append(projectContext).append("/blog/articles/").append(lastBlog.getId()).append("'>").append(lastBlog.getTitle()).append("</a></p>");
         }
         if (nextBlog == null || nextBlog.getId() == null) {
             pageCode.append("<p>下一篇：没有了</p>");
         } else {
-            pageCode.append("<p>下一篇：<a href='" + projectContext + "/blog/articles/" + nextBlog.getId() + "'>" + nextBlog.getTitle() + "</a></p>");
+            pageCode.append("<p>下一篇：<a href='").append(projectContext).append("/blog/articles/").append(nextBlog.getId()).append("'>").append(nextBlog.getTitle()).append("</a></p>");
         }
         return pageCode.toString();
     }
@@ -135,19 +143,19 @@ public class BlogController {
      */
     private String genUpAndDownPageCode(Integer page, Integer totalNum, String q, Integer pageSize, String projectContext) {
         long totalPage = totalNum % pageSize == 0 ? totalNum / pageSize : totalNum / pageSize + 1;
-        StringBuffer pageCode = new StringBuffer();
+        StringBuilder pageCode = new StringBuilder();
         if (totalPage == 0) {
             return "";
         } else {
             pageCode.append("<nav>");
             pageCode.append("<ul class='pager' >");
             if (page > 1) {
-                pageCode.append("<li><a href='" + projectContext + "/blog/q.do?page=" + (page - 1) + "&q=" + q + "'>上一页</a></li>");
+                pageCode.append("<li><a href='").append(projectContext).append("/blog/q.do?page=").append(page - 1).append("&q=").append(q).append("'>上一页</a></li>");
             } else {
                 pageCode.append("<li class='disabled'><a href='#'>上一页</a></li>");
             }
             if (page < totalPage) {
-                pageCode.append("<li><a href='" + projectContext + "/blog/q.do?page=" + (page + 1) + "&q=" + q + "'>下一页</a></li>");
+                pageCode.append("<li><a href='").append(projectContext).append("/blog/q.do?page=").append(page + 1).append("&q=").append(q).append("'>下一页</a></li>");
             } else {
                 pageCode.append("<li class='disabled'><a href='#'>下一页</a></li>");
             }

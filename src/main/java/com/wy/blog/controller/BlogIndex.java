@@ -24,14 +24,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
- *
  * @author Administrator
  */
 public class BlogIndex {
 
     private Directory dir = null;
-    private String lucenePath = "D:/lucene/blog_index";
+    //本地使用
+    private final String lucenePath = "D:/lucene/blog_index";
+    //服务器使用
+//    private final String lucenePath = "/usr/local/src/blog/lucene/blog_index";
 
     /**
      * 获取IndexWriter实例
@@ -90,7 +91,7 @@ public class BlogIndex {
      */
     public void deleteIndex(String blogId) throws Exception {
         IndexWriter writer = getWriter();
-        writer.deleteDocuments(new Term[]{new Term("id", blogId)});
+        writer.deleteDocuments(new Term("id", blogId));
         writer.forceMergeDeletes(); // 强制删除
         writer.commit();
         writer.close();

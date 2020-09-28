@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.util.List;
 
 @SpringBootTest
@@ -31,7 +32,23 @@ class BlogApplicationTests {
             }
         });
 
-
     }
 
+    @Test
+    void test2() {
+        File files = new File("E:/IdeaProjects/blog/target/classes/static/userImages/");
+        System.out.println("file = " + files);
+        if (files.isDirectory()) {
+            for (File file : files.listFiles()) {
+                System.out.println("file = " + file);
+                if (file.isFile()) {
+                    if (!file.getName().equalsIgnoreCase("20200924032258.jpg")){
+                        boolean delete = file.delete();
+                        System.out.println("delete = " + delete);
+                    }
+                }
+            }
+        }
+
+    }
 }

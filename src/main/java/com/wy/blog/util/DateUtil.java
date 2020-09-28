@@ -2,6 +2,7 @@ package com.wy.blog.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 日期工具类
@@ -20,6 +21,7 @@ public class DateUtil {
     public static String formatDate(Date date, String format) {
         String result = "";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         if (date != null) {
             result = sdf.format(date);
         }

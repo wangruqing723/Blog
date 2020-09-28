@@ -57,13 +57,6 @@ public class SystemAdminController {
         return "admin/refreshSystem";
     }
 
-    /*@Override
-    public void run(String... args) throws Exception {
-        ResponseData responseData = new ResponseData();
-        ServletRequest request = new ;
-        this.refreshSystem(responseData,request);
-    }*/
-
     /**
      * @Description: 刷新系统缓存
      * @Param: [response, request]
@@ -76,24 +69,29 @@ public class SystemAdminController {
     public ResponseData refreshSystem(ResponseData responseData, HttpServletRequest request) throws Exception {
         ServletContext application = RequestContextUtils.findWebApplicationContext(request).getServletContext();
         // 更新博主信息
-        Blogger blogger = bloggerService.find();
-        blogger.setPassword(null);
-        log.debug("存入app域中的博主信息为:{}", blogger);
-        application.setAttribute("blogger", blogger);
-        // 更新博客类型
-        List<BlogType> blogTypeCountList = blogTypeService.countList();
-        log.debug("存入app域中的博客类型信息为:{}", blogTypeCountList);
-        application.setAttribute("blogTypeCountList", blogTypeCountList);
-        // 更新博客文章
-        List<Blog> blogCountList = blogService.countList();
-        log.debug("存入app域中的博客信息为:{}", blogCountList);
-        application.setAttribute("blogCountList", blogCountList);
-        // 更新友情链接
-        List<Link> linkList = linkService.list(null);
-        log.debug("存入app域中的友情链接信息为:{}", linkList);
-        application.setAttribute("linkList", linkList);
+        try {
+            Blogger blogger = bloggerService.find();
+            blogger.setPassword(null);
+            log.debug("存入app域中的博主信息为:{}", blogger);
+            application.setAttribute("blogger", blogger);
+            // 更新博客类型
+            List<BlogType> blogTypeCountList = blogTypeService.countList();
+            log.debug("存入app域中的博客类型信息为:{}", blogTypeCountList);
+            application.setAttribute("blogTypeCountList", blogTypeCountList);
+            // 更新博客文章
+            List<Blog> blogCountList = blogService.countList();
+            log.debug("存入app域中的博客信息为:{}", blogCountList);
+            application.setAttribute("blogCountList", blogCountList);
+            // 更新友情链接
+            List<Link> linkList = linkService.list(null);
+            log.debug("存入app域中的友情链接信息为:{}", linkList);
+            application.setAttribute("linkList", linkList);
 
-        responseData.setSuccess(true);
+            responseData.setSuccess(true);
+        } catch (Exception e) {
+            responseData.setSuccess(false);
+        }
+
         return responseData;
     }
 }

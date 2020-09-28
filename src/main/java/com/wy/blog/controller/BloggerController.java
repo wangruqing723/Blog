@@ -29,6 +29,7 @@ public class BloggerController {
      */
     @RequestMapping("/aboutMe.do")
     public ModelAndView aboutMe() throws Exception {
+        log.debug("携带数据并跳转到关于博主页面渲染");
         ModelAndView mav = new ModelAndView();
         mav.addObject("blogger", bloggerService.find());
         mav.addObject("mainPage", "foreground/blogger/info.html");

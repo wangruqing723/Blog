@@ -6,12 +6,12 @@
 </head>
 <body>
 Hello Blog Home page!!!</br>
-<a href="/toLogin.do">跳转login</a>
+<a th:href="@{/toLogin.do}">跳转login</a>
 </body>
 <script type="text/javascript">
 
     window.onload = function () {
-        window.location.href = "/index.do";
+        window.location.href = "[[@{/index.do}]]";
     }
 
 </script>

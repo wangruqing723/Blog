@@ -12,53 +12,40 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
         <input type="hidden" id="currPage">
-        <fieldset class="table-search-fieldset">
-            <legend>搜索信息</legend>
-            <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" action="">
-                    <div class="layui-form-item">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="table-reload-btn">
+                    <div class="layui-inline">
+                        博客标题：
                         <div class="layui-inline">
-                            <label class="layui-form-label">博客标题</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="blogTitle" autocomplete="off"
-                                       class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">博客类别</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="typeName" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
-                            </button>
+                            <input data-type="reload" class="layui-input" name="blogTitle" id="blogTitle"
+                                   autocomplete="off"/>
                         </div>
                     </div>
-                </form>
+                    <button class="layui-btn" data-type="reload"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+
+                <script type="text/html" id="toolbarDemo">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add">
+                            <i class="layui-icon layui-icon-add-1"></i> 添加
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">
+                            <i class="layui-icon layui-icon-delete"></i> 删除
+                        </button>
+                    </div>
+                </script>
+
+                <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+                <script type="text/html" id="currentTableBar">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit"><i
+                            class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete"><i
+                            class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
             </div>
-        </fieldset>
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add">
-                    <i class="layui-icon layui-icon-add-1"></i> 添加
-                </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">
-                    <i class="layui-icon layui-icon-delete"></i> 删除
-                </button>
-            </div>
-        </script>
-
-        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-
-        <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit"><i
-                    class="layui-icon layui-icon-edit"></i>编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete"><i
-                    class="layui-icon layui-icon-delete"></i>删除</a>
-        </script>
-
+        </div>
     </div>
 </div>
 <div th:include="~{include/include::#commonJs}"></div>
@@ -110,7 +97,7 @@
                 //得到数据总量
                 console.log(count);
 
-                if (curr > 1 && res.data.length == 0) {
+                if (curr > 1 && res.data.length === 0) {
                     table.reload('currentTableId', {
                         page: {
                             curr: curr - 1//重新从当前页开始
@@ -125,6 +112,7 @@
             parseData: function (res) { //res 即为原始返回的数据
                 return {
                     'code': res.code, //解析接口状态
+                    "msg": res.message, //解析提示文本
                     'count': res.count, //解析数据长度
                     'data': res.data //解析数据列表
                 };
@@ -150,22 +138,46 @@
         });
 
         /**
-         *  监听搜索
+         *  搜索
          */
-        form.on('submit(data-search-btn)', function (data) {
+        /*form.on('submit(data-search-btn)', function (data) {
             console.log(data);
             console.log(data.field.blogTitle);
-            console.log(data.field.typeName);
             table.reload('currentTableId', {
                 where: {
-                    title: data.field.blogTitle,
-                    typeName: data.field.typeName
+                    title: data.field.blogTitle
                 },
                 page: {
                     curr: 1
                 },
-                data: '#currentTableId'
-            });
+                // data: '#currentTableId'
+            }, 'data');
+        });*/
+
+        var active = {
+            reload: function () {
+                //执行重载
+                table.reload('currentTableId', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        title: $.trim($("#blogTitle").val())
+                    }
+                });
+            }
+        };
+
+        $('.table-reload-btn .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        $('#blogTitle').on('keyup', function (event) {
+            if (event.keyCode === 13) {
+                console.log(event);
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            }
         });
 
         /**
@@ -294,7 +306,10 @@
                                     $.post("[[@{/admin/blog/delete.do}]]", {ids: ids},
                                         function (result) {
                                             if (result.success) {
-                                                layer.msg('"' + data.title + '"' + '博客已成功删除！', {icon: 1, time: 2000});
+                                                layer.msg('"' + data.title + '"' + '博客已成功删除！', {
+                                                    icon: 1,
+                                                    time: 2000
+                                                });
                                                 table.reload('currentTableId', {
                                                     page: {
                                                         curr: $("#currPage").val()//重新从当前页开始
@@ -315,7 +330,8 @@
                     });
             }
         });
-    });
+    })
+    ;
 </script>
 </body>
 </html>

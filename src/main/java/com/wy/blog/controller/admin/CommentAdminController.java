@@ -56,19 +56,19 @@ public class CommentAdminController {
     public ResponseData list(@RequestParam(value = "page", required = false, defaultValue = "1") String page,
                              @RequestParam(value = "limit", required = false, defaultValue = "10") String rows,
                              @RequestParam(value = "state", required = false) String state,
-                             ResponseData responseData) throws Exception {
+                             ResponseData responseData) {
+        log.debug("查询评论信息page={},rows={},state={}", page, rows, state);
         PageBean pageBean = new PageBean(Integer.parseInt(page), Integer.parseInt(rows));
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(16);
         map.put("start", pageBean.getStart());
         map.put("size", pageBean.getPageSize());
-        map.put("state", state); // 评论状态
+        // 评论状态
+        map.put("state", state);
         List<Comment> commentList = commentService.list(map);
-        log.debug("打印commentList = {}", commentList);
         Long total = commentService.getTotal(map);
         responseData.setData(commentList);
         responseData.setCount(total);
         responseData.setCode(0);
-        log.debug("返回的数据 = {}", responseData);
         return responseData;
     }
 
@@ -82,17 +82,13 @@ public class CommentAdminController {
      */
     @RequestMapping("/delete.do")
     @ResponseBody
-    public ResponseData delete(@RequestParam(value = "ids") String ids, ResponseData responseData) throws Exception {
+    public ResponseData delete(@RequestParam(value = "ids") String ids, ResponseData responseData) {
+        log.debug("删除评论ids={}", ids);
         String[] idsStr = ids.split(",");
-        for (int i = 0; i < idsStr.length; i++) {
-            Integer count = commentService.delete(Integer.parseInt(idsStr[i]));
-            if (count > 0) {
-                responseData.setSuccess(true);
-            } else {
-                responseData.setSuccess(false);
-            }
+        for (String s : idsStr) {
+            commentService.delete(Integer.parseInt(s));
         }
-        log.debug("删除成功={}", idsStr);
+        responseData.setSuccess(true);
         return responseData;
     }
 
@@ -120,21 +116,16 @@ public class CommentAdminController {
     @ResponseBody
     public ResponseData review(@RequestParam(value = "ids") String ids,
                                @RequestParam(value = "state") Integer state,
-                               ResponseData responseData) throws Exception {
+                               ResponseData responseData) {
+        log.debug("需要审核的评论id数组 = {},state={}", ids, state);
         String[] idsStr = ids.split(",");
-        log.debug("需要审核的评论id数组 = {}", idsStr);
-        for (int i = 0; i < idsStr.length; i++) {
+        for (String s : idsStr) {
             Comment comment = new Comment();
             comment.setState(state);
-            comment.setId(Integer.parseInt(idsStr[i]));
-            Integer count = commentService.update(comment);
-            if (count > 0) {
-                responseData.setSuccess(true);
-            } else {
-                responseData.setSuccess(false);
-            }
+            comment.setId(Integer.parseInt(s));
+            commentService.update(comment);
         }
-        log.debug("审核评论完...");
+        responseData.setSuccess(true);
         return responseData;
     }
 

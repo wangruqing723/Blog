@@ -41,7 +41,6 @@ public class CommentController {
         try {
             ImageUtil.respImage(session, response);
         } catch (IOException e) {
-            log.debug("刷新出错...{}", e);
             e.printStackTrace();
         }
     }
@@ -59,13 +58,17 @@ public class CommentController {
     public ResponseData save(Comment comment, @RequestParam("imageCode") String imageCode,
                              HttpServletRequest request, ResponseData responseData,
                              HttpSession session) throws Exception {
-        String sRand = (String) session.getAttribute("sRand"); // 获取系统生成的验证码
-        int resultTotal = 0; // 操作的记录条数
+        log.debug("保存评论信息={},图片验证码={}", comment, imageCode);
+        // 获取系统生成的验证码
+        String sRand = (String) session.getAttribute("sRand");
+        // 操作的记录条数
+        int resultTotal = 0;
         if (!imageCode.equals(sRand)) {
             responseData.setSuccess(false);
-            responseData.setErrorInfo("验证码填写错误！");
+            responseData.setMessage("验证码填写错误！");
         } else {
-            String userIp = request.getRemoteAddr(); // 获取用户IP
+            // 获取用户IP
+            String userIp = request.getRemoteAddr();
             comment.setUserIp(userIp);
             if (comment.getId() == null) {
                 resultTotal = commentService.add(comment);
@@ -73,14 +76,8 @@ public class CommentController {
                 Blog blog = blogService.findById(comment.getBlog().getId());
                 blog.setReplyHit(blog.getReplyHit() + 1);
                 blogService.update(blog);
-            } else {
-
             }
-            if (resultTotal > 0) {
-                responseData.setSuccess(true);
-            } else {
-                responseData.setSuccess(false);
-            }
+            responseData.setSuccess(resultTotal > 0);
         }
         return responseData;
     }

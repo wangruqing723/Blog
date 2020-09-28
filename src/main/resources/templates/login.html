@@ -23,7 +23,7 @@
         }
 
         body {
-            background-image: url("/layuimini/images/bg.jpg");
+            background-image: url("[[@{/layuimini/images/bg.jpg}]]");
             height: 100%;
             width: 100%;
         }
@@ -123,7 +123,7 @@
         }
 
         .tou {
-            background: url("/images/tou.png") no-repeat;
+            background: url("[[@{/images/tou.png}]]") no-repeat;
             width: 97px;
             height: 92px;
             position: absolute;
@@ -132,7 +132,7 @@
         }
 
         .left_hand {
-            background: url("/images/left_hand.png") no-repeat;
+            background: url("[[@{/images/left_hand.png}]]") no-repeat;
             width: 32px;
             height: 37px;
             position: absolute;
@@ -141,7 +141,7 @@
         }
 
         .right_hand {
-            background: url("/images/right_hand.png") no-repeat;
+            background: url("[[@{/images/right_hand.png}]]") no-repeat;
             width: 32px;
             height: 37px;
             position: absolute;
@@ -150,7 +150,7 @@
         }
 
         .initial_left_hand {
-            background: url("/images/hand.png") no-repeat;
+            background: url("[[@{/images/hand.png}]]") no-repeat;
             width: 30px;
             height: 20px;
             position: absolute;
@@ -159,7 +159,7 @@
         }
 
         .initial_right_hand {
-            background: url("/images/hand.png") no-repeat;
+            background: url("[[@{/images/hand.png}]]") no-repeat;
             width: 30px;
             height: 20px;
             position: absolute;
@@ -168,7 +168,7 @@
         }
 
         .left_handing {
-            background: url("/images/left-handing.png") no-repeat;
+            background: url("[[@{/images/left-handing.png}]]") no-repeat;
             width: 30px;
             height: 20px;
             position: absolute;
@@ -177,7 +177,7 @@
         }
 
         .right_handinging {
-            background: url("/images/right_handing.png") no-repeat;
+            background: url("[[@{/images/right_handing.png}]]") no-repeat;
             width: 30px;
             height: 20px;
             position: absolute;
@@ -192,9 +192,9 @@
             code = "";
             var codeLength = 4;//验证码的长度
             var checkCode = document.getElementById("code");
-            var random = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+            var random = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G',
                 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
-                'Z');//随机数
+                'Z'];//随机数
             for (var i = 0; i < codeLength; i++) {//循环操作
                 var index = Math.floor(Math.random() * 36);//取得随机数的索引（0~35）
                 code += random[index];//根据索引取得随机数加到code上
@@ -250,22 +250,22 @@
             // 进行登录操作
             form.on('submit(login)', function (data) {
                 data = data.field;
-                if ($.trim(data.captcha) == "") {
+                if ($.trim(data.captcha) === "") {
                     layer.msg('验证码不能为空', {time: 2000});
                     return false;
                 }
-                if (data.captcha.toUpperCase() != code) {
+                if (data.captcha.toUpperCase() !== code) {
                     layer.msg('验证码错误', {time: 1000},
                         function () {
                             createCode();
                         });
                     return false;
                 }
-                if ($.trim(data.userName) == "") {
+                if ($.trim(data.userName) === "") {
                     layer.msg('用户名不能为空', {time: 2000});
                     return false;
                 }
-                if ($.trim(data.password) == "") {
+                if ($.trim(data.password) === "") {
                     layer.msg('密码不能为空', {time: 2000});
                     return false;
                 }

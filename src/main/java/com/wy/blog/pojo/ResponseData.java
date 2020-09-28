@@ -3,7 +3,6 @@ package com.wy.blog.pojo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.stereotype.Component;
 
 /**
  * @author WY
@@ -21,6 +20,6 @@ public class ResponseData {
     private Integer code;   //返回码
     private Boolean success;//返回状态
     private String exist;    //返回是否存在状态
-    private String errorInfo;//返回错误信息
+    private String message;//返回响应信息
 
 }

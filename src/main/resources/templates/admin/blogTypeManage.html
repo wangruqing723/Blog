@@ -169,8 +169,8 @@
                                         $.post("[[@{/admin/blogType/delete.do}]]", {ids: ids},
                                             function (result) {
                                                 if (result.success) {
-                                                    if (result.exist) {
-                                                        layer.msg(data.typeName + "等" + result.exist, {
+                                                    if (result.message) {
+                                                        layer.msg(result.message, {
                                                             icon: 0,
                                                             time: 2000
                                                         });

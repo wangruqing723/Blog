@@ -59,11 +59,10 @@ public class BlogTypeAdminController {
     @ResponseBody
     public ResponseData list(@RequestParam(value = "page", required = false, defaultValue = "1") String page,
                              @RequestParam(value = "limit", required = false, defaultValue = "10") String rows,
-                             ResponseData responseData) throws Exception {
-        log.debug("当前页:{}", page);
-        log.debug("每页显示:{}", rows);
+                             ResponseData responseData) {
+        log.debug("查询博客类型page={},rows={}", page, rows);
         PageBean pageBean = new PageBean(Integer.parseInt(page), Integer.parseInt(rows));
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(16);
         map.put("start", pageBean.getStart());
         map.put("size", pageBean.getPageSize());
         List<BlogType> blogTypeList = blogTypeService.list(map);
@@ -71,7 +70,6 @@ public class BlogTypeAdminController {
         responseData.setData(blogTypeList);
         responseData.setCount(total);
         responseData.setCode(0);
-        log.debug("返回的数据 = {}", responseData);
         return responseData;
     }
 
@@ -86,17 +84,15 @@ public class BlogTypeAdminController {
     @RequestMapping("/save.do")
     @ResponseBody
     public ResponseData save(BlogType blogType, ResponseData responseData) throws Exception {
-        int resultTotal = 0; // 操作的记录条数
+        log.debug("更新博客类型blogType={}", blogType);
+        // 操作的记录条数
+        int resultTotal = 0;
         if (blogType.getId() == null) {
             resultTotal = blogTypeService.add(blogType);
         } else {
             resultTotal = blogTypeService.update(blogType);
         }
-        if (resultTotal > 0) {
-            responseData.setSuccess(true);
-        } else {
-            responseData.setSuccess(false);
-        }
+        responseData.setSuccess(resultTotal > 0);
         return responseData;
     }
 
@@ -111,12 +107,13 @@ public class BlogTypeAdminController {
     @RequestMapping("/delete.do")
     @ResponseBody
     public ResponseData delete(@RequestParam(value = "ids") String ids, ResponseData responseData) throws Exception {
+        log.debug("删除博客类别ids={}", ids);
         String[] idsStr = ids.split(",");
-        for (int i = 0; i < idsStr.length; i++) {
-            if (blogService.getBlogByTypeId(Integer.parseInt(idsStr[i])) > 0) {
-                responseData.setExist("类型下有博客，不能删除！");
+        for (String s : idsStr) {
+            if (blogService.getBlogByTypeId(Integer.parseInt(s)) > 0) {
+                responseData.setMessage("id为:" + s + "的类型下有博客，不能删除！");
             } else {
-                blogTypeService.delete(Integer.parseInt(idsStr[i]));
+                blogTypeService.delete(Integer.parseInt(s));
             }
         }
         responseData.setSuccess(true);

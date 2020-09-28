@@ -38,7 +38,7 @@ public class BlogAdminController {
     }
 
     // 博客索引
-    private BlogIndex blogIndex = new BlogIndex();
+    private final BlogIndex blogIndex = new BlogIndex();
 
     /**
      * 添加或者修改博客信息
@@ -51,19 +51,19 @@ public class BlogAdminController {
     @RequestMapping("/save.do")
     @ResponseBody
     public ResponseData save(Blog blog, ResponseData responseData) throws Exception {
-        int resultTotal = 0; // 操作的记录条数
+        log.debug("保存或修改博客={}", blog);
+        // 操作的记录条数
+        int resultTotal = 0;
         if (blog.getId() == null) {
-            resultTotal = blogService.add(blog).intValue();
-            blogIndex.addIndex(blog); // 添加博客索引
+            resultTotal = blogService.add(blog);
+            // 添加博客索引
+            blogIndex.addIndex(blog);
         } else {
-            resultTotal = blogService.update(blog).intValue();
-            blogIndex.updateIndex(blog); // 更新博客索引
+            resultTotal = blogService.update(blog);
+            // 更新博客索引
+            blogIndex.updateIndex(blog);
         }
-        if (resultTotal > 0) {
-            responseData.setSuccess(true);
-        } else {
-            responseData.setSuccess(false);
-        }
+        responseData.setSuccess(resultTotal > 0);
         return responseData;
     }
 
@@ -78,7 +78,7 @@ public class BlogAdminController {
      *
      * @param page
      * @param rows
-     * @param s_blog
+     * @param sBlog
      * @param responseData
      * @return
      * @throws Exception
@@ -87,13 +87,15 @@ public class BlogAdminController {
     @ResponseBody
     public ResponseData list(@RequestParam(value = "page", required = false, defaultValue = "1") String page,
                              @RequestParam(value = "rows", required = false, defaultValue = "10") String rows,
-                             Blog s_blog, ResponseData responseData) throws Exception {
+                             Blog sBlog, ResponseData responseData) {
+        log.debug("后台页面搜索的参数Blog={},page={},rows={}", sBlog, page, rows);
         PageBean pageBean = new PageBean(Integer.parseInt(page), Integer.parseInt(rows));
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", StringUtil.formatLike(s_blog.getTitle()));
+        Map<String, Object> map = new HashMap<String, Object>(16);
+        map.put("title", StringUtil.formatLike(sBlog.getTitle()));
         map.put("start", pageBean.getStart());
         map.put("size", pageBean.getPageSize());
         List<Blog> blogList = blogService.list(map);
+        log.debug("blogList-{}", blogList);
         Long total = blogService.getTotal(map);
         responseData.setCode(0);
         responseData.setData(blogList);
@@ -112,10 +114,12 @@ public class BlogAdminController {
     @RequestMapping("/delete.do")
     @ResponseBody
     public ResponseData delete(@RequestParam(value = "ids") String ids, ResponseData responseData) throws Exception {
+        log.debug("删除博客数组ids={}", ids);
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
-            blogService.delete(Integer.valueOf(Integer.parseInt(idsStr[i])));
-            blogIndex.deleteIndex(idsStr[i]); // 删除对应博客的索引
+            blogService.delete(Integer.parseInt(idsStr[i]));
+            // 删除对应博客的索引
+            blogIndex.deleteIndex(idsStr[i]);
         }
         responseData.setSuccess(true);
         return responseData;
@@ -132,8 +136,8 @@ public class BlogAdminController {
     @RequestMapping("/findById.do")
     @ResponseBody
     public Blog findById(@RequestParam(value = "id") String id) throws Exception {
-        Blog blog = blogService.findById(Integer.parseInt(id));
-        return blog;
+        log.debug("通过id查找博客id={}", id);
+        return blogService.findById(Integer.parseInt(id));
     }
 
 

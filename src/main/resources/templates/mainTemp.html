@@ -39,7 +39,21 @@
 
     <div class="row">
         <div class="col-md-9">
-            <div th:replace="${mainPage}"></div>
+            <div th:if="${blogger != null || blog != null || commentList != null || blogList != null}">
+                <div th:replace="${mainPage}"></div>
+            </div>
+            <div class="data_list" th:if="${blogger == null && blog == null && blogList == null}">
+                <div class="data_list_title">
+                    <img th:src="@{/images/blog_show_icon.png}"/>
+                    博客信息
+                </div>
+                <div>
+                    <div style="text-align: center;font-size: 30px;padding-bottom: 30px;margin-top: 50px;">该博客已删除!!!</div>
+                    <div class="blog_lastAndNextPage" style="margin-top: 70px;">
+                        <span th:utext="${pageCode}"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-3">

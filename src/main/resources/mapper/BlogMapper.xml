@@ -13,7 +13,7 @@
         <result property="replyHit" column="replyHit"/>
         <result property="content" column="content"/>
         <result property="keyWord" column="keyWord"/>
-        <association property="blogType" column="typeId" select="com.wy.blog.dao.BlogTypeDao.findById"></association>
+        <association property="blogType" column="typeId" select="com.wy.blog.dao.BlogTypeDao.findById"/>
 
     </resultMap>
 
