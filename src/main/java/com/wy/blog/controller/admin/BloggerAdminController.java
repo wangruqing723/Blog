@@ -73,11 +73,9 @@ public class BloggerAdminController {
             File files = new File(filePath + "/static/userImages/");
             if (files.isDirectory()) {
                 for (File file : Objects.requireNonNull(files.listFiles())) {
-                    System.out.println("file = " + file);
-                    if (file.isFile()) {
-                        if (!file.getName().equalsIgnoreCase(currentImage)) {
-                            delete = file.delete();
-                        }
+                    log.debug("存储图片的目录file = {}", file);
+                    if (file.isFile() && !file.getName().equalsIgnoreCase(currentImage)) {
+                        delete = file.delete();
                     }
                 }
             }
