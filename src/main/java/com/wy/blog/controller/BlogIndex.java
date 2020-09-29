@@ -30,9 +30,9 @@ public class BlogIndex {
 
     private Directory dir = null;
     //本地使用
-    private final String lucenePath = "D:/lucene/blog_index";
+//    private final String lucenePath = "D:/lucene/blog_index";
     //服务器使用
-//    private final String lucenePath = "/usr/local/src/blog/lucene/blog_index";
+    private final String lucenePath = "/usr/local/src/blog/lucene/blog_index";
 
     /**
      * 获取IndexWriter实例

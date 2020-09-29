@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.Objects;
 
@@ -64,20 +65,17 @@ public class BloggerAdminController {
      */
     @RequestMapping("/cleanImages.do")
     @ResponseBody
-    public ResponseData cleanImages(@Param("currentImage") String currentImage, ResponseData responseData) {
+    public ResponseData cleanImages(@Param("currentImage") String currentImage, HttpServletRequest request, ResponseData responseData) {
         log.debug("清理图片,节省空间={}", currentImage);
         boolean delete = true;
         if (StringUtils.isNotBlank(currentImage)) {
-            String filePath = Objects.requireNonNull(this.getClass().getClassLoader().getResource("")).getPath().substring(1);
-            // E:/IdeaProjects/blog/target/classes/
-            File files = new File(filePath + "/static/userImages/");
+            String filePath = request.getServletContext().getRealPath("/");
+            File files = new File(filePath + "userImages/");
             if (files.isDirectory()) {
                 for (File file : Objects.requireNonNull(files.listFiles())) {
-                    System.out.println("file = " + file);
-                    if (file.isFile()) {
-                        if (!file.getName().equalsIgnoreCase(currentImage)) {
-                            delete = file.delete();
-                        }
+                    log.debug("存储图片的目录file = {}", file);
+                    if (file.isFile() && !file.getName().equalsIgnoreCase(currentImage)) {
+                        delete = file.delete();
                     }
                 }
             }

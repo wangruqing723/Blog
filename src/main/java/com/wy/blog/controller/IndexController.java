@@ -113,24 +113,24 @@ public class IndexController {
             //获取url和uri,得到服务器虚拟路径
             // http://localhost:8109/ueditor/config.do
             StringBuffer imageUrl = request.getRequestURL();
-            // /ueditor/config
+            // /ueditor/config.do
             String imageUri = request.getRequestURI();
             //获取系统时间生成存储图片的路径和名称
             Date date = new Date(System.currentTimeMillis());
             String format = new SimpleDateFormat("yyyyMMdd").format(date);
             // 使用uri为切割条件,把url切割之后得到 http://localhost:8109/
-            String path = (imageUrl.toString().split(imageUri))[0] + "/userImages/" + format + "/";
+            String path = imageUrl.toString().split(imageUri)[0] + "/userImages/" + format + "/";
             //获取文件的类型 image/png   image/jpg   切割之后拼接成文件名
             String imageName = date.getTime() + "." + Objects.requireNonNull(imageFile.getContentType()).split("/")[1];
             //访问路径
             String accessPath = path + imageName;
             log.debug("访问路径accessPath={}", accessPath);
-            //存储路径
-            String storagePath = Objects.requireNonNull(this.getClass().getClassLoader().getResource("")).getPath().substring(1) + "/static/userImages/" + format + "/" + imageName;
-            log.debug("存储路径storagePath={}", storagePath);
 
             //创建图片存放目录
-            FileUtils.forceMkdir(new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("")).getPath().substring(1) + "/static/userImages/" + format));
+            FileUtils.forceMkdir(new File(request.getServletContext().getRealPath("/") + "userImages/" + format));
+            //存储路径
+            String storagePath = request.getServletContext().getRealPath("/") + "userImages/" + format + "/" + imageName;
+            log.debug("存储路径storagePath={}", storagePath);
 
             //使用io流存储文件
             imageFile.transferTo(new File(storagePath));
@@ -154,12 +154,11 @@ public class IndexController {
      */
     @RequestMapping("/upload.do")
     @ResponseBody
-    public ResponseData upload(@RequestParam("file") MultipartFile imageFile, ResponseData responseData) throws Exception {
+    public ResponseData upload(@RequestParam("file") MultipartFile imageFile, HttpServletRequest request, ResponseData responseData) throws Exception {
         log.debug("上传图片并返回存储(访问)路径,因为不需要回显,所以不需要访问路径,只需返回存储路径");
-        String filePath = Objects.requireNonNull(this.getClass().getClassLoader().getResource("")).getPath().substring(1);
-//        E:/IdeaProjects/blog/target/classes/
+        String filePath = request.getServletContext().getRealPath("/");
         String imageName = DateUtil.getCurrentDateStr() + "." + Objects.requireNonNull(imageFile.getOriginalFilename()).split("\\.")[1];
-        String pathname = filePath + "/static/userImages/" + imageName;
+        String pathname = filePath + "userImages/" + imageName;
         log.debug("pathname={}", pathname);
         imageFile.transferTo(new File(pathname));
         Map<String, String> map = new HashMap<>(16);
