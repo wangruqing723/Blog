@@ -160,7 +160,7 @@ public class IndexController {
 //        E:/IdeaProjects/blog/target/classes/
         String imageName = DateUtil.getCurrentDateStr() + "." + Objects.requireNonNull(imageFile.getOriginalFilename()).split("\\.")[1];
         String pathname = filePath + "/static/userImages/" + imageName;
-        log.debug("pathname={}", imageName);
+        log.debug("pathname={}", pathname);
         imageFile.transferTo(new File(pathname));
         Map<String, String> map = new HashMap<>(16);
         map.put("imageName", imageName);

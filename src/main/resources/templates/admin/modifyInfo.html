@@ -145,6 +145,7 @@
             }
             , error: function () {
                 //请求异常回调
+                element.progress('demo', "0%");
                 layer.msg('上传失败', {icon: 2, time: 2000});
             }
         });
