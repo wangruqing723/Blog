@@ -110,6 +110,9 @@ public class IndexController {
         UploadData uploadData = null;
         try {
             uploadData = new UploadData();
+            /* 因为截取到的地址为http://127.0.0.1:8109,所以公网访问的时候会存储在访问者的计算机上,
+            图片访问地址也就是http://127.0.0.1:8109/userImages/...
+            ,所以不能回显,这里直接使用服务器地址 121.40.82.107:8109(域名:)
             //获取url和uri,得到服务器虚拟路径
             // http://localhost:8109/ueditor/config.do
             StringBuffer imageUrl = request.getRequestURL();
@@ -121,8 +124,17 @@ public class IndexController {
             // 使用uri为切割条件,把url切割之后得到 http://localhost:8109/
             String path = imageUrl.toString().split(imageUri)[0] + "/userImages/" + format + "/";
             //获取文件的类型 image/png   image/jpg   切割之后拼接成文件名
+            String imageName = date.getTime() + "." + Objects.requireNonNull(imageFile.getContentType()).split("/")[1];*/
+
+            //获取系统时间生成存储图片的路径和名称
+            Date date = new Date(System.currentTimeMillis());
+            String format = new SimpleDateFormat("yyyyMMdd").format(date);
+            //直接使用服务器地址
+            String path = "http://blog.vewlwy.wang" + "/userImages/" + format + "/";
+            //获取文件的类型 image/png   image/jpg   切割之后拼接成文件名
             String imageName = date.getTime() + "." + Objects.requireNonNull(imageFile.getContentType()).split("/")[1];
-            //访问路径
+
+            //访问路径  http://blog.vewlwy.wang/userImages/20200930/1601446503182.png
             String accessPath = path + imageName;
             log.debug("访问路径accessPath={}", accessPath);
 
