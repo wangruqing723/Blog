@@ -9,7 +9,7 @@ spring:
     username: root
     password: wyong
   thymeleaf:
-    cache: false
+    cache: true
 
 mybatis:
   type-aliases-package: com.wy.blog.pojo
