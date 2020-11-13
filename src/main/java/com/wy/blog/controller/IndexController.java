@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,9 @@ import java.util.*;
 @Slf4j
 @Controller
 public class IndexController {
+
+    @Value("${upload.serviceAddr}")
+    private String uploadUrl;
 
     @Autowired
     private BlogService blogService;
@@ -130,7 +134,7 @@ public class IndexController {
             Date date = new Date(System.currentTimeMillis());
             String format = new SimpleDateFormat("yyyyMMdd").format(date);
             //直接使用服务器地址
-            String path = "http://blog.vewlwy.wang" + "/userImages/" + format + "/";
+            String path = uploadUrl + "/userImages/" + format + "/";
             //获取文件的类型 image/png   image/jpg   切割之后拼接成文件名
             String imageName = date.getTime() + "." + Objects.requireNonNull(imageFile.getContentType()).split("/")[1];
 

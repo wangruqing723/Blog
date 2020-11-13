@@ -5,6 +5,7 @@ import com.wy.blog.pojo.Blog;
 import com.wy.blog.service.BlogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
@@ -12,6 +13,14 @@ import java.util.List;
 
 @SpringBootTest
 class BlogApplicationTests {
+
+    @Value("${upload.serviceAddr}")
+    private String uploadUrl;
+
+    @Test
+    void test() {
+        System.out.println("uploadUrl = " + uploadUrl);
+    }
 
     // 博客索引
     private BlogIndex blogIndex = new BlogIndex();
@@ -42,7 +51,7 @@ class BlogApplicationTests {
             for (File file : files.listFiles()) {
                 System.out.println("file = " + file);
                 if (file.isFile()) {
-                    if (!file.getName().equalsIgnoreCase("20200924032258.jpg")){
+                    if (!file.getName().equalsIgnoreCase("20200924032258.jpg")) {
                         boolean delete = file.delete();
                         System.out.println("delete = " + delete);
                     }

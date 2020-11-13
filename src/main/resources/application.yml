@@ -18,3 +18,6 @@ mybatis:
 logging:
   level:
     root: debug
+
+upload:
+  serviceAddr: http://114.215.202.68:8109
