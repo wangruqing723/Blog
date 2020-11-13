@@ -1,6 +1,6 @@
 package com.wy.blog;
 
-import com.wy.blog.controller.BlogIndex;
+import com.wy.blog.lucene.BlogIndex;
 import com.wy.blog.pojo.Blog;
 import com.wy.blog.service.BlogService;
 import org.junit.jupiter.api.Test;

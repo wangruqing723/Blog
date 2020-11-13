@@ -1,4 +1,4 @@
-package com.wy.blog.controller;
+package com.wy.blog.lucene;
 
 import com.wy.blog.pojo.Blog;
 import com.wy.blog.util.DateUtil;

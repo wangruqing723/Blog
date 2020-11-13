@@ -1,6 +1,6 @@
 package com.wy.blog.controller.admin;
 
-import com.wy.blog.controller.BlogIndex;
+import com.wy.blog.lucene.BlogIndex;
 import com.wy.blog.pojo.Blog;
 import com.wy.blog.pojo.PageBean;
 import com.wy.blog.pojo.ResponseData;
