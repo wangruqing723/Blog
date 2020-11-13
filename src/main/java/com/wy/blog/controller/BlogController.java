@@ -1,5 +1,6 @@
 package com.wy.blog.controller;
 
+import com.wy.blog.lucene.BlogIndex;
 import com.wy.blog.pojo.Blog;
 import com.wy.blog.service.BlogService;
 import com.wy.blog.service.CommentService;
