@@ -17,14 +17,14 @@ public interface BlogDao {
      *
      * @return
      */
-    public List<Blog> countList();
+    List<Blog> countList();
 
     /**
      * 分页查询博客
      *
      * @return
      */
-    public List<Blog> list(Map<String, Object> map);
+    List<Blog> list(Map<String, Object> map);
 
     /**
      * 获取总记录数
@@ -32,7 +32,7 @@ public interface BlogDao {
      * @param map
      * @return
      */
-    public Long getTotal(Map<String, Object> map);
+     Long getTotal(Map<String, Object> map);
 
     /**
      * 通过Id查找实体
@@ -40,7 +40,7 @@ public interface BlogDao {
      * @param id
      * @return
      */
-    public Blog findById(Integer id);
+     Blog findById(Integer id);
 
     /**
      * 更新博客信息
@@ -48,7 +48,7 @@ public interface BlogDao {
      * @param blog
      * @return
      */
-    public Integer update(Blog blog);
+     Integer update(Blog blog);
 
     /**
      * 获取上一个博客
@@ -56,7 +56,7 @@ public interface BlogDao {
      * @param id
      * @return
      */
-    public Blog getLastBlog(Integer id);
+     Blog getLastBlog(Integer id);
 
     /**
      * 获取下一个博客
@@ -64,7 +64,7 @@ public interface BlogDao {
      * @param id
      * @return
      */
-    public Blog getNextBlog(Integer id);
+     Blog getNextBlog(Integer id);
 
     /**
      * 添加博客信息
@@ -72,7 +72,7 @@ public interface BlogDao {
      * @param blog
      * @return
      */
-    public Integer add(Blog blog);
+     Integer add(Blog blog);
 
     /**
      * 删除博客信息
@@ -80,7 +80,7 @@ public interface BlogDao {
      * @param id
      * @return
      */
-    public Integer delete(Integer id);
+     Integer delete(Integer id);
 
     /**
      * 查询指定的博客类别下的博客数量
@@ -88,7 +88,7 @@ public interface BlogDao {
      * @param typeId
      * @return
      */
-    public Integer getBlogByTypeId(Integer typeId);
+     Integer getBlogByTypeId(Integer typeId);
 
 
 }
